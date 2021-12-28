@@ -10,11 +10,17 @@ import Footer from "../footer";
 // import "./app.css";
 
 const App = () => {
+  const todoData = [
+    { label: "Completed task", id: 1 },
+    { label: "Editing task", id: 2 },
+    { label: "Active task", id: 3 },
+  ];
+
   return (
     <div className="todoapp">
       <NewTaskForm />
       <section className="main">
-        <TaskList />
+        <TaskList todos={todoData} />
         <Footer />
       </section>
     </div>

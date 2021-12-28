@@ -1,18 +1,16 @@
 import Task from "../task";
 // import "./todo-list.css";
 
-const TaskList = () => {
+const TaskList = ({ todos }) => {
+  const elements = todos.map((item) => {
+    return <Task key={item.id} label={item.label} />;
+  });
+
   return (
     <ul className="todo-list">
-      <li className="completed">
-        <Task label="Completed task" />
-      </li>
-      <li className="editing">
-        <Task label="Editing task" />
-      </li>
-      <li>
-        <Task label="Active task" />
-      </li>
+      <li className="completed">{elements[0]}</li>
+      <li className="editing">{elements[1]}</li>
+      <li>{elements[2]}</li>
     </ul>
   );
 };
