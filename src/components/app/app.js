@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 
 // import Task from "../task";
 import TaskList from "../task-list";
@@ -9,22 +9,35 @@ import Footer from "../footer";
 
 // import "./app.css";
 
-const App = () => {
-  const todoData = [
-    { label: "Completed task", id: 1 },
-    { label: "Editing task", id: 2 },
-    { label: "Active task", id: 3 },
-  ];
+export default class App extends Component {
+  state = {
+    todoData: [
+      { label: "Completed task", id: 1 },
+      { label: "Editing task", id: 2 },
+      { label: "Active task", id: 3 },
+    ],
+  };
 
-  return (
-    <div className="todoapp">
-      <NewTaskForm />
-      <section className="main">
-        <TaskList todos={todoData} />
-        <Footer />
-      </section>
-    </div>
-  );
-};
+  deleteTask = (id) => {
+    this.setState(({ todoData }) => {
+      const idx = todoData.findIndex((el) => el.id === id);
 
-export default App;
+      const newArray = [...todoData.slice(0, idx), ...todoData.slice(idx + 1)];
+      return {
+        todoData: newArray,
+      };
+    });
+  };
+
+  render() {
+    return (
+      <div className="todoapp">
+        <NewTaskForm />
+        <section className="main">
+          <TaskList todos={this.state.todoData} onDeleted={this.deleteTask} />
+          <Footer />
+        </section>
+      </div>
+    );
+  }
+}
