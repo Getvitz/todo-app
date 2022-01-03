@@ -1,19 +1,27 @@
-import { Component } from "react/cjs/react.production.min";
+const filterButtons = [
+  { name: "All", label: "All" },
+  { name: "Active", label: "Active" },
+  { name: "Completed", label: "Completed" },
+];
 
-export default class TaskFilter extends Component {
-  render() {
+const TaskFilter = ({ filter, onFilterChange = () => {} }) => {
+  const buttons = filterButtons.map(({ name, label }) => {
+    const isActive = name === filter;
+    const classNames = isActive ? "selected" : "";
     return (
-      <ul className="filters">
-        <li>
-          <button className="selected">All</button>
-        </li>
-        <li>
-          <button>Active</button>
-        </li>
-        <li>
-          <button>Completed</button>
-        </li>
-      </ul>
+      <li key={name}>
+        <button
+          type="button"
+          onClick={() => onFilterChange(name)}
+          className={classNames}
+        >
+          {label}
+        </button>
+      </li>
     );
-  }
-}
+  });
+
+  return <ul className="filters">{buttons}</ul>;
+};
+
+export default TaskFilter;

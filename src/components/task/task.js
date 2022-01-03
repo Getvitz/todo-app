@@ -4,34 +4,16 @@ import { formatDistanceToNow } from "date-fns";
 import { Component } from "react/cjs/react.production.min";
 
 export default class Task extends Component {
-  state = {
-    completed: false,
-  };
-
-  onCheckBoxClick = () => {
-    this.setState((state) => {
-      return {
-        completed: !state.completed,
-      };
-    });
-  };
-
   render() {
-    const { label, onDeleted } = this.props;
-    const { completed } = this.state;
-
+    const { label, onDeleted, onToggleDone, completed } = this.props;
     let classNames = "view";
-    if (completed) {
+    if (completed === true) {
       classNames += " completed";
     }
 
     return (
       <li className={classNames}>
-        <input
-          className="toggle"
-          type="checkbox"
-          onClick={this.onCheckBoxClick}
-        />
+        <input className="toggle" type="checkbox" onClick={onToggleDone} />
         <label>
           <span className="description">{label}</span>
           <span className="created">
