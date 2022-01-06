@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-
 import TaskList from "../task-list";
 import NewTaskForm from "../new-task-form";
 import Footer from "../footer";
@@ -64,7 +63,6 @@ export default class App extends Component {
 
   addTask = (text) => {
     const newTask = this.createTask(text);
-
     this.setState(({ todoData }) => {
       const newArr = [...todoData, newTask];
       return {

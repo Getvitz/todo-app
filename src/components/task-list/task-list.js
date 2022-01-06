@@ -1,7 +1,7 @@
+import propTypes from "prop-types";
 import Task from "../task";
-// import "./todo-list.css";
 
-const TaskList = ({ todos, onDeleted, onToggleDone, completed }) => {
+const TaskList = ({ todos, onDeleted, onToggleDone }) => {
   const elements = todos.map((item) => {
     return (
       <Task
@@ -15,6 +15,19 @@ const TaskList = ({ todos, onDeleted, onToggleDone, completed }) => {
   });
 
   return <ul className="todo-list">{elements}</ul>;
+};
+
+TaskList.defaultProps = {
+  todos: [
+    { label: "Default task 1", completed: false, id: 1 },
+    { label: "Default task 2", completed: false, id: 2 },
+  ],
+  onToggleDone: () => {},
+  onDeleted: () => {},
+};
+
+TaskList.propTypes = {
+  todos: propTypes.arrayOf(propTypes.object),
 };
 
 export default TaskList;

@@ -1,4 +1,5 @@
 import TaskFilter from "../task-filter";
+import propTypes from "prop-types";
 
 const Footer = ({ leftTasksCount, filter, onFilterChange, clearTasks }) => {
   return (
@@ -10,6 +11,21 @@ const Footer = ({ leftTasksCount, filter, onFilterChange, clearTasks }) => {
       </button>
     </footer>
   );
+};
+
+Footer.defaultProps = {
+  filter: "Active",
+  leftTasksCount: 0,
+};
+
+Footer.propTypes = {
+  filter: (props, propName, componentName) => {
+    const value = props[propName];
+    if (typeof value === "string") return null;
+    else return new TypeError(`${componentName}: ${propName} must be string`);
+  },
+
+  leftTasksCount: propTypes.number,
 };
 
 export default Footer;
