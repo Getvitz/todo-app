@@ -1,21 +1,31 @@
+import { formatDistanceToNow } from "date-fns";
 import propTypes from "prop-types";
+import { Component } from "react/cjs/react.production.min";
 import Task from "../task";
 
-const TaskList = ({ todos, onDeleted, onToggleDone }) => {
-  const elements = todos.map((item) => {
-    return (
-      <Task
-        key={item.id}
-        label={item.label}
-        onDeleted={() => onDeleted(item.id)}
-        onToggleDone={() => onToggleDone(item.id)}
-        completed={item.completed}
-      />
-    );
-  });
+export default class TaskList extends Component {
+  render() {
+    const { todos, onDeleted, onToggleDone } = this.props;
+    const elements = todos.map((item) => {
+      const created = new Date(item.createTime);
+      const createTime = formatDistanceToNow(created, {
+        includeSeconds: true,
+      });
+      return (
+        <Task
+          key={item.id}
+          label={item.label}
+          onDeleted={() => onDeleted(item.id)}
+          onToggleDone={() => onToggleDone(item.id)}
+          completed={item.completed}
+          createTime={createTime}
+        />
+      );
+    });
 
-  return <ul className="todo-list">{elements}</ul>;
-};
+    return <ul className="todo-list">{elements}</ul>;
+  }
+}
 
 TaskList.defaultProps = {
   todos: [
@@ -29,5 +39,3 @@ TaskList.defaultProps = {
 TaskList.propTypes = {
   todos: propTypes.arrayOf(propTypes.object),
 };
-
-export default TaskList;

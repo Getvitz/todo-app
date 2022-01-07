@@ -47,6 +47,7 @@ export default class App extends Component {
       label,
       completed: false,
       id: this.maxId++,
+      createTime: new Date(),
     };
   }
 

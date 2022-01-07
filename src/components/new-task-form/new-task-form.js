@@ -31,6 +31,7 @@ export default class NewTaskForm extends Component {
             autoFocus
             onChange={this.onLabelChange}
             value={this.state.label}
+            // createTime={this.state.createTime}
           />
           <button className="add-btn">Add to list</button>
         </form>
