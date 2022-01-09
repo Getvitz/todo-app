@@ -5,20 +5,26 @@ import Task from "../task";
 
 export default class TaskList extends Component {
   render() {
-    const { todos, onDeleted, onToggleDone } = this.props;
+    const { todos, onDeleted, onToggleDone, editTask, changeLabel } =
+      this.props;
     const elements = todos.map((item) => {
       const created = new Date(item.createTime);
-      const createTime = formatDistanceToNow(created, {
+      const createTimeToNow = formatDistanceToNow(created, {
         includeSeconds: true,
       });
+      const { id } = item;
       return (
         <Task
-          key={item.id}
+          key={id}
+          id={id}
           label={item.label}
-          onDeleted={() => onDeleted(item.id)}
-          onToggleDone={() => onToggleDone(item.id)}
+          onDeleted={() => onDeleted(id)}
+          onToggleDone={() => onToggleDone(id)}
           completed={item.completed}
-          createTime={createTime}
+          createTimeToNow={createTimeToNow}
+          editTask={() => editTask(id)}
+          changeLabel={changeLabel}
+          edited={item.edited}
         />
       );
     });

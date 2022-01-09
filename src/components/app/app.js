@@ -15,32 +15,15 @@ export default class App extends Component {
     filter: "All",
   };
 
-  onFilterChange = (filter) => {
-    this.setState({ filter });
-  };
-
-  clearTasks = () => {
+  addTask = (text) => {
+    const newTask = this.createTask(text);
     this.setState(({ todoData }) => {
-      const newArr = [];
-      for (let i = 0; i < todoData.length; i++) {
-        if (!todoData[i].completed) {
-          newArr.push(todoData[i]);
-        }
-      }
+      const newArr = [...todoData, newTask];
       return {
         todoData: newArr,
       };
     });
   };
-
-  filterTasks(todoData, filter) {
-    if (filter === "All") return todoData;
-    else if (filter === "Active") {
-      return todoData.filter((task) => !task.completed);
-    } else if (filter === "Completed") {
-      return todoData.filter((task) => task.completed);
-    }
-  }
 
   createTask(label) {
     return {
@@ -48,26 +31,16 @@ export default class App extends Component {
       completed: false,
       id: this.maxId++,
       createTime: new Date(),
+      edited: false,
     };
   }
 
   deleteTask = (id) => {
     this.setState(({ todoData }) => {
       const idx = todoData.findIndex((el) => el.id === id);
-
       const newArray = [...todoData.slice(0, idx), ...todoData.slice(idx + 1)];
       return {
         todoData: newArray,
-      };
-    });
-  };
-
-  addTask = (text) => {
-    const newTask = this.createTask(text);
-    this.setState(({ todoData }) => {
-      const newArr = [...todoData, newTask];
-      return {
-        todoData: newArr,
       };
     });
   };
@@ -88,6 +61,69 @@ export default class App extends Component {
     });
   };
 
+  changeLabel = (id, label) => {
+    this.setState(({ todoData }) => {
+      const newArr = todoData.map((el) => {
+        if (el.id === id) {
+          return {
+            ...el,
+            label,
+            completed: false,
+            edited: false,
+          };
+        }
+        return el;
+      });
+      return {
+        todoData: newArr,
+      };
+    });
+  };
+
+  editTask = (id) => {
+    this.setState(({ todoData }) => {
+      const newArr = todoData.map((el) => {
+        if (el.id === id) {
+          return {
+            ...el,
+            edited: true,
+          };
+        }
+        return el;
+      });
+      return {
+        todoData: newArr,
+      };
+    });
+  };
+
+  onFilterChange = (filter) => {
+    this.setState({ filter });
+  };
+
+  filterTasks(todoData, filter) {
+    if (filter === "All") return todoData;
+    else if (filter === "Active") {
+      return todoData.filter((task) => !task.completed);
+    } else if (filter === "Completed") {
+      return todoData.filter((task) => task.completed);
+    }
+  }
+
+  clearTasks = () => {
+    this.setState(({ todoData }) => {
+      const newArr = [];
+      for (let i = 0; i < todoData.length; i++) {
+        if (!todoData[i].completed) {
+          newArr.push(todoData[i]);
+        }
+      }
+      return {
+        todoData: newArr,
+      };
+    });
+  };
+
   render() {
     const { todoData, filter } = this.state;
     const visibleTasks = this.filterTasks(todoData, filter);
@@ -102,6 +138,8 @@ export default class App extends Component {
             todos={visibleTasks}
             onDeleted={this.deleteTask}
             onToggleDone={this.onToggleDone}
+            changeLabel={this.changeLabel}
+            editTask={this.editTask}
           />
           <Footer
             leftTasksCount={leftTasksCount}
