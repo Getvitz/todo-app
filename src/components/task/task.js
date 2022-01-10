@@ -1,21 +1,16 @@
 import React from "react";
 import propTypes from "prop-types";
+import cn from "classnames";
 import EditTaskForm from "../edit-task-form";
 
 
 function Task({label, id, onDeleted, onToggleDone, completed, createTimeToNow, editTask, changeLabel, edited}) {
   let checked = false;
-  let classNames = "view";
   if (completed === true) {
-      classNames += " completed";
       checked = true;
     }
-    if (edited === true) {
-      classNames += " editing";
-    }
-
     return (
-      <li key={id} className={classNames}>
+      <li key={id} className={cn('view', {'completed' : completed}, {'editing' : edited})}>
         <input
           className="toggle"
           type="checkbox"
@@ -24,7 +19,7 @@ function Task({label, id, onDeleted, onToggleDone, completed, createTimeToNow, e
           checked={checked}
         />
         <label>
-          <span className="description">
+          <span className="description" role='button' tabIndex={0} onClick={onToggleDone} onKeyDown={onToggleDone}>
             {label || "You created an empty task! Please delete it and type smth."}
           </span>
           <span className="created">{createTimeToNow}</span>
@@ -49,7 +44,7 @@ function Task({label, id, onDeleted, onToggleDone, completed, createTimeToNow, e
 
   Task.propTypes = {
     label: propTypes.string,
-    id: propTypes.number.isRequired,
+    id: propTypes.string.isRequired,
     completed: propTypes.bool,
     onDeleted: propTypes.func,
     onToggleDone: propTypes.func,

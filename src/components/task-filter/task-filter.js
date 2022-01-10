@@ -1,5 +1,6 @@
 import React from "react";
 import propTypes from "prop-types";
+import cn from "classnames";
 
 const filterButtons = [
   { name: "All", label: "All" },
@@ -10,13 +11,12 @@ const filterButtons = [
 function TaskFilter({ filter, onFilterChange = () => {} }) {
   const buttons = filterButtons.map(({ name, label }) => {
     const isActive = name === filter;
-    const classNames = isActive ? "selected" : "";
     return (
       <li key={name}>
         <button
           type="button"
           onClick={() => onFilterChange(name)}
-          className={classNames}
+          className={cn({"selected":isActive})}
         >
           {label}
         </button>

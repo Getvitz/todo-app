@@ -20,8 +20,7 @@ export default class EditTaskForm extends Component {
 
   onLabelChange = (event) => {
     this.setState({
-      newLabel:
-        event.target.value.charAt(0).toUpperCase() + event.target.value.slice(1),
+      newLabel: this.formattedLabel(event)
     });
   };
 
@@ -30,13 +29,17 @@ export default class EditTaskForm extends Component {
     const { newLabel } = this.state;
 
     if (event.key === "Enter") {
-      if (newLabel === "") {
+      if (!newLabel) {
         changeLabel(id, label);
       } else {
         changeLabel(id, newLabel);
       }
     }
   };
+
+  formattedLabel(event) {
+    return event.target.value.charAt(0).toUpperCase() + event.target.value.slice(1)
+  }
 
   render() {
     const { label } = this.props;

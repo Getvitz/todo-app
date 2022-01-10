@@ -9,7 +9,7 @@ export default class NewTaskForm extends Component {
 
   onLabelChange = (event) => {
     this.setState({
-      label: event.target.value.charAt(0).toUpperCase() + event.target.value.slice(1),
+      label: this.formattedLabel(event),
     });
   };
 
@@ -22,6 +22,10 @@ export default class NewTaskForm extends Component {
       label: "",
     });
   };
+
+  formattedLabel(event) {
+    return event.target.value.charAt(0).toUpperCase() + event.target.value.slice(1)
+  }
 
   render() {
     const {label} = this.state;

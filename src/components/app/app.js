@@ -1,36 +1,44 @@
 import React, { Component } from "react";
+import { v4 as uuidv4 } from 'uuid';
 import TaskList from "../task-list";
 import NewTaskForm from "../new-task-form";
 import Footer from "../footer";
 
 export default class App extends Component {
-  maxId = 100;
 
+  ACTIONS = {
+    ALL: 'All',
+    ACTIVE: 'Active',
+    COMPLETED: 'Completed'
+  }
+   
   state = {
-    todoData: [
-      this.createTask("Completed Task"),
-      this.createTask("Editing Task"),
-      this.createTask("Active Task"),
-    ],
-    filter: "All",
+    todoData: [],
+    filter: this.ACTIONS.ALL,
   };
 
+  componentDidMount() {
+    this.setState({
+      todoData: window.localStorage.getItem('todoData') ? JSON.parse(window.localStorage.getItem('todoData')) : [],
+    })
+  }
+
   addTask = (text) => {
+    const {todoData} = this.state;
     const newTask = this.createTask(text);
-    this.setState(({ todoData }) => {
-      const newArr = [...todoData, newTask];
-      return {
-        todoData: newArr,
-      };
+    const newArr = [...todoData, newTask];
+    this.sendDataToLs(newArr);
+    this.setState({
+      todoData: newArr,
     });
   };
 
   deleteTask = (id) => {
     this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id);
-      const newArray = [...todoData.slice(0, idx), ...todoData.slice(idx + 1)];
+      const newArr = [...todoData.filter((item) => item.id !== id)];
+      this.sendDataToLs(newArr);
       return {
-        todoData: newArray,
+        todoData: newArr,
       };
     });
   };
@@ -40,13 +48,14 @@ export default class App extends Component {
       const idx = todoData.findIndex((el) => el.id === id);
       const oldTask = todoData[idx];
       const newTask = { ...oldTask, completed: !oldTask.completed };
-      const newArray = [
+      const newArr = [
         ...todoData.slice(0, idx),
         newTask,
         ...todoData.slice(idx + 1),
       ];
+      this.sendDataToLs(newArr);
       return {
-        todoData: newArray,
+        todoData: newArr,
       };
     });
   };
@@ -64,6 +73,7 @@ export default class App extends Component {
         }
         return el;
       });
+      this.sendDataToLs(newArr);
       return {
         todoData: newArr,
       };
@@ -81,6 +91,7 @@ export default class App extends Component {
         }
         return el;
       });
+      this.sendDataToLs(newArr);
       return {
         todoData: newArr,
       };
@@ -94,11 +105,10 @@ export default class App extends Component {
   clearTasks = () => {
     this.setState(({ todoData }) => {
       const newArr = [];
-      for (let i = 0; i < todoData.length; i++) {
-        if (!todoData[i].completed) {
-          newArr.push(todoData[i]);
-        }
-      }
+      todoData.forEach(element => {
+        if(!element.completed) newArr.push(element)
+      });
+      this.sendDataToLs(newArr);
       return {
         todoData: newArr,
       };
@@ -106,24 +116,27 @@ export default class App extends Component {
   };
 
   filterTasks(todoData, filter) {
-    if (filter === "All") return todoData;
-    if (filter === "Active") {
+    if (filter === this.ACTIONS.ALL) return todoData;
+    if (filter === this.ACTIONS.ACTIVE) {
       return todoData.filter((task) => !task.completed);
-    } if (filter === "Completed") {
+    } if (filter === this.ACTIONS.COMPLETED) {
       return todoData.filter((task) => task.completed);
     }
     return null
   }
 
   createTask(label) {
-    this.maxId += 1
     return {
       label,
       completed: false,
-      id: this.maxId,
+      id: uuidv4(),
       createTime: new Date(),
       edited: false,
     };
+  }
+
+  sendDataToLs(arr) {
+    return window.localStorage.setItem('todoData', JSON.stringify(arr));
   }
 
   render() {
@@ -131,11 +144,15 @@ export default class App extends Component {
     const visibleTasks = this.filterTasks(todoData, filter);
     const completedCount = todoData.filter((el) => el.completed).length;
     const leftTasksCount = todoData.length - completedCount;
-
+    let emptyMsg;
+    if(visibleTasks.length<1) {
+      emptyMsg = 'No tasks here'
+    }
     return (
       <div className="todoapp">
         <NewTaskForm addTask={this.addTask} />
         <section className="main">
+          <span className="emptyMsg">{emptyMsg}</span>
           <TaskList
             todos={visibleTasks}
             onDeleted={this.deleteTask}
