@@ -25,10 +25,7 @@ function Task({label, id, onDeleted, onToggleDone, completed, createTimeToNow, e
         />
         <label>
           <span className="description">
-            {label ||
-              alert(
-                "You created empty task! Please delete it and type smth before adding to list!"
-              )}
+            {label || "You created an empty task! Please delete it and type smth."}
           </span>
           <span className="created">{createTimeToNow}</span>
         </label>
