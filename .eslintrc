@@ -15,7 +15,7 @@
     //   },
       "requireConfigFile": false,
       "babelOptions": {
-        "configFile": "/Users/nadya/Desktop/React/kata/.babel.rc"
+        "configFile": "./.babel.rc"
       }
     },
     "env": {
