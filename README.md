@@ -1,2 +1,2 @@
 Todo Application Mikhaylov Vladimir
-https://kata-m7c50mvt2-getvitz.vercel.app/
+https://kata-2mi8mnar3-getvitz.vercel.app/
