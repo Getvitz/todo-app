@@ -3,13 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/core": "^7.16.7",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
-    "babel-eslint": "^10.1.0",
     "date-fns": "^2.27.0",
-    "eslint-plugin-react": "^7.28.0",
-    "eslint-plugin-react-hooks": "^4.3.0",
     "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -17,20 +15,25 @@
     "web-vitals": "^2.1.2"
   },
   "scripts": {
-    "lint": "eslint ./src",
-    "lint:fix": "eslint ./src --fix --color",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
     "format": "prettier --write src/**/*.js",
-    "lint-staged": "lint-staged",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint-staged": "lint-staged"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
+    ]
+  },
+  "lint-staged": {
+    "*.(js|jsx)": [
+      "npm run lint:fix"
     ]
   },
   "browserslist": {
@@ -47,6 +50,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.16.5",
+    "@babel/eslint-plugin": "^7.16.5",
     "@babel/preset-react": "^7.16.7",
     "eslint": "^8.6.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -55,19 +59,8 @@
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-prettier": "^4.0.0",
-    "husky": "^7.0.4",
+    "husky": "^7.0.2",
     "lint-staged": "^12.1.7",
     "prettier": "^2.5.1"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.(js|jsx)": [
-      "npm run lint:fix",
-      "git add"
-    ]
   }
 }
