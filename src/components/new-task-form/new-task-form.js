@@ -32,11 +32,10 @@ export default class NewTaskForm extends Component {
           <input
             className="new-todo"
             placeholder="What needs to be done?"
-            // autoFocus
             onChange={this.onLabelChange}
             value={label}
           />
-          <button type="button" className="add-btn">Add to list</button>
+          <button type="button" className="add-btn" onClick={this.onSubmit}>Add to list</button>
         </form>
       </header>
     );
