@@ -14,7 +14,7 @@ export default class EditTaskForm extends Component {
 
   static propTypes = {
     label: PropTypes.string,
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     changeLabel: PropTypes.func,
   };
 

@@ -5,6 +5,8 @@ import { Component } from "react/cjs/react.production.min";
 export default class NewTaskForm extends Component {
   state = {
     label: "",
+    min: "",
+    sec: ""
   };
 
   onLabelChange = (event) => {
@@ -13,13 +15,28 @@ export default class NewTaskForm extends Component {
     });
   };
 
+  onTimerMinChange = (event) => {
+    this.setState({
+      min: event.target.value,
+    });
+  };
+
+  onTimerSecChange = (event) => {
+    this.setState({
+      sec: event.target.value,
+    });
+  };
+
   onSubmit = (event) => {
-    const {label} = this.state;
+    if(event.key !== 'Enter' && event.target.type !== 'button') return;
+    const {label, min, sec} = this.state;
     const {addTask} = this.props;
     event.preventDefault();
-    addTask(label);
+    addTask(label, min, sec);
     this.setState({
       label: "",
+      min: "",
+      sec: ""
     });
   };
 
@@ -28,7 +45,7 @@ export default class NewTaskForm extends Component {
   }
 
   render() {
-    const {label} = this.state;
+    const {label, min, sec} = this.state;
     return (
       <header className="header">
         <h1>todos</h1>
@@ -38,7 +55,10 @@ export default class NewTaskForm extends Component {
             placeholder="What needs to be done?"
             onChange={this.onLabelChange}
             value={label}
+            onKeyPress={this.onSubmit}
           />
+          <input className="new-todo-form__timer" placeholder="Min" value={min} onChange={this.onTimerMinChange} onKeyPress={this.onSubmit} />
+          <input className="new-todo-form__timer" placeholder="Sec" value={sec} onChange={this.onTimerSecChange}  onKeyPress={this.onSubmit}/>
           <button type="button" className="add-btn" onClick={this.onSubmit}>Add to list</button>
         </form>
       </header>

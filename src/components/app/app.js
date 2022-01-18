@@ -23,9 +23,9 @@ export default class App extends Component {
     })
   }
 
-  addTask = (text) => {
+  addTask = (text, min, sec) => {
     const {todoData} = this.state;
-    const newTask = this.createTask(text);
+    const newTask = this.createTask(text, min, sec);
     const newArr = [...todoData, newTask];
     this.sendDataToLs(newArr);
     this.setState({
@@ -125,13 +125,15 @@ export default class App extends Component {
     return null
   }
 
-  createTask(label) {
+  createTask(label, min, sec) {
     return {
       label,
       completed: false,
       id: uuidv4(),
       createTime: new Date(),
       edited: false,
+      min,
+      sec
     };
   }
 
@@ -140,7 +142,7 @@ export default class App extends Component {
   }
 
   render() {
-    const { todoData, filter } = this.state;
+    const { todoData, filter, min, sec } = this.state;
     const visibleTasks = this.filterTasks(todoData, filter);
     const completedCount = todoData.filter((el) => el.completed).length;
     const leftTasksCount = todoData.length - completedCount;
@@ -159,6 +161,8 @@ export default class App extends Component {
             onToggleDone={this.onToggleDone}
             changeLabel={this.changeLabel}
             editTask={this.editTask}
+            min={min}
+            sec={sec}
           />
           <Footer
             leftTasksCount={leftTasksCount}

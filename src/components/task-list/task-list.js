@@ -2,8 +2,10 @@ import React from "react";
 import { formatDistanceToNow } from "date-fns";
 import propTypes from "prop-types";
 import Task from "../task";
+// import min from "date-fns/min";
 
 function TaskList({ todos, onDeleted, onToggleDone, editTask, changeLabel }) {
+  // console.log(typeof(min), typeof(sec))
   const elements = todos.map((item) => {
     const created = new Date(item.createTime);
     const createTimeToNow = formatDistanceToNow(created, {
@@ -22,6 +24,8 @@ function TaskList({ todos, onDeleted, onToggleDone, editTask, changeLabel }) {
         editTask={() => editTask(id)}
         changeLabel={changeLabel}
         edited={item.edited}
+        min={+item.min}
+        sec={+item.sec}
       />
     );
   });
@@ -45,6 +49,6 @@ TaskList.propTypes = {
   onToggleDone: propTypes.func,
   onDeleted: propTypes.func,
   editTask: propTypes.func.isRequired,
-  changeLabel: propTypes.func.isRequired
+  changeLabel: propTypes.func.isRequired,
 }
 
