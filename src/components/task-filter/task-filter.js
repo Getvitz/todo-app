@@ -1,6 +1,6 @@
-import React from "react";
-import propTypes from "prop-types";
+import React, {useContext} from "react";
 import cn from "classnames";
+import Context from "../../context/context";
 
 const filterButtons = [
   { name: "All", label: "All" },
@@ -8,7 +8,8 @@ const filterButtons = [
   { name: "Completed", label: "Completed" },
 ];
 
-function TaskFilter({ filter, onFilterChange = () => {} }) {
+function TaskFilter() {
+  const {filter, onFilterChange} = useContext(Context)
   const buttons = filterButtons.map(({ name, label }) => {
     const isActive = name === filter;
     return (
@@ -25,11 +26,6 @@ function TaskFilter({ filter, onFilterChange = () => {} }) {
   });
 
   return <ul className="filters">{buttons}</ul>;
-}
-
-TaskFilter.propTypes = {
-  filter: propTypes.string.isRequired,
-  onFilterChange: propTypes.func.isRequired
 }
 
 export default TaskFilter;

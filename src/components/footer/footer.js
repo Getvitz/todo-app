@@ -1,8 +1,9 @@
-import React from "react";
-import propTypes from "prop-types";
+import React, {useContext} from "react";
+import Context from "../../context/context";
 import TaskFilter from "../task-filter";
 
-function Footer({ leftTasksCount, filter, onFilterChange, clearTasks }) {
+function Footer() {
+  const {leftTasksCount, filter, onFilterChange, clearTasks} = useContext(Context)
   return (
     <footer className="footer">
       <span className="todo-count">{leftTasksCount} items left</span>
@@ -13,21 +14,5 @@ function Footer({ leftTasksCount, filter, onFilterChange, clearTasks }) {
     </footer>
   );
 }
-
-Footer.defaultProps = {
-  filter: "Active",
-  leftTasksCount: 0,
-};
-
-Footer.propTypes = {
-  filter: (props, propName, componentName) => {
-    const value = props[propName];
-    if (typeof value === "string") return null;
-    return new TypeError(`${componentName}: ${propName} must be string`);
-  },
-  onFilterChange: propTypes.func.isRequired,
-  clearTasks: propTypes.func.isRequired,
-  leftTasksCount: propTypes.number,
-};
 
 export default Footer;

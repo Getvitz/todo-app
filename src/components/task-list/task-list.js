@@ -1,12 +1,11 @@
-import React from "react";
+import React, {useContext} from "react";
 import { formatDistanceToNow } from "date-fns";
-import propTypes from "prop-types";
 import Task from "../task";
-// import min from "date-fns/min";
+import Context from "../../context/context";
 
-function TaskList({ todos, onDeleted, onToggleDone, editTask, changeLabel }) {
-  // console.log(typeof(min), typeof(sec))
-  const elements = todos.map((item) => {
+function TaskList() {
+  const {visibleTasks} = useContext(Context)
+  const elements = visibleTasks.map((item) => {
     const created = new Date(item.createTime);
     const createTimeToNow = formatDistanceToNow(created, {
       includeSeconds: true,
@@ -17,12 +16,8 @@ function TaskList({ todos, onDeleted, onToggleDone, editTask, changeLabel }) {
         key={id}
         id={id}
         label={item.label}
-        onDeleted={() => onDeleted(id)}
-        onToggleDone={() => onToggleDone(id)}
         completed={item.completed}
         createTimeToNow={createTimeToNow}
-        editTask={() => editTask(id)}
-        changeLabel={changeLabel}
         edited={item.edited}
         min={+item.min}
         sec={+item.sec}
@@ -34,21 +29,4 @@ function TaskList({ todos, onDeleted, onToggleDone, editTask, changeLabel }) {
 }
 
 export default TaskList;
-
-TaskList.defaultProps = {
-  todos: [
-    { label: "Default task 1", completed: false, id: 1 },
-    { label: "Default task 2", completed: false, id: 2 },
-  ],
-  onToggleDone: () => {},
-  onDeleted: () => {},
-};
-
-TaskList.propTypes = {
-  todos: propTypes.arrayOf(propTypes.object),
-  onToggleDone: propTypes.func,
-  onDeleted: propTypes.func,
-  editTask: propTypes.func.isRequired,
-  changeLabel: propTypes.func.isRequired,
-}
 

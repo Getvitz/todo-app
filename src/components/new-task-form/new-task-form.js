@@ -1,71 +1,59 @@
-import React from "react";
-import propTypes from "prop-types";
-import { Component } from "react/cjs/react.production.min";
+import React, {useState, useContext} from "react";
+import Context from "../../context/context";
 
-export default class NewTaskForm extends Component {
-  state = {
-    label: "",
-    min: "",
-    sec: ""
+export default function NewTaskForm () {
+
+  const [label, setLabel] = useState('')
+  const [min, setMin] = useState('')
+  const [sec, setSec] = useState('')
+
+  const {addTask} = useContext(Context);
+
+  const formattedLabel = (event) => event.target.value.charAt(0).toUpperCase() + event.target.value.slice(1);
+
+
+  const onLabelChange = (event) => {
+    setLabel(formattedLabel(event))
   };
 
-  onLabelChange = (event) => {
-    this.setState({
-      label: this.formattedLabel(event),
-    });
+  const onTimerMinChange = (event) => {
+    event.preventDefault()
+    setMin(event.target.value)
   };
 
-  onTimerMinChange = (event) => {
-    this.setState({
-      min: event.target.value,
-    });
+  const onTimerSecChange = (event) => {
+    setSec(event.target.value)
+
   };
 
-  onTimerSecChange = (event) => {
-    this.setState({
-      sec: event.target.value,
-    });
-  };
-
-  onSubmit = (event) => {
-    if(event.key !== 'Enter' && event.target.type !== 'button') return;
-    const {label, min, sec} = this.state;
-    const {addTask} = this.props;
-    event.preventDefault();
+  const onSubmit = (event) => {
+    if(event.target.type === 'number') {
+    if (!/[0-9]/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+   if(event.key === 'Enter') {
     addTask(label, min, sec);
-    this.setState({
-      label: "",
-      min: "",
-      sec: ""
-    });
+    setLabel('');
+    setMin('');
+    setSec('');
+    }
   };
 
-  formattedLabel(event) {
-    return event.target.value.charAt(0).toUpperCase() + event.target.value.slice(1)
-  }
-
-  render() {
-    const {label, min, sec} = this.state;
-    return (
-      <header className="header">
-        <h1>todos</h1>
-        <form onSubmit={this.onSubmit}>
-          <input
-            className="new-todo"
-            placeholder="What needs to be done?"
-            onChange={this.onLabelChange}
-            value={label}
-            onKeyPress={this.onSubmit}
-          />
-          <input className="new-todo-form__timer" placeholder="Min" value={min} onChange={this.onTimerMinChange} onKeyPress={this.onSubmit} />
-          <input className="new-todo-form__timer" placeholder="Sec" value={sec} onChange={this.onTimerSecChange}  onKeyPress={this.onSubmit}/>
-          <button type="button" className="add-btn" onClick={this.onSubmit}>Add to list</button>
-        </form>
-      </header>
-    );
-  }
-}
-
-NewTaskForm.propTypes = {
-  addTask: propTypes.func.isRequired
+  return (
+    <header className="header">
+      <h1>todos</h1>
+      <form onSubmit={onSubmit}>
+        <input
+          className="new-todo"
+          placeholder="Whats need to be done?"
+          onChange={onLabelChange}
+          value={label}
+          onKeyPress={onSubmit}
+        />
+        <input className="new-todo-form__timer" placeholder="Min" overflow="hidden" type="number" value={min} onChange={onTimerMinChange} onKeyPress={onSubmit}/>
+        <input className="new-todo-form__timer" placeholder="Sec" type="number" value={sec} onChange={onTimerSecChange}  onKeyPress={onSubmit}/>
+      </form>
+    </header>
+  );
 }

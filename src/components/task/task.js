@@ -1,109 +1,88 @@
-import React from "react";
+import React, {useState, useEffect, useContext} from "react";
 import propTypes from "prop-types";
 import cn from "classnames";
-import { Component } from "react/cjs/react.production.min";
+import Context from "../../context/context";
 import EditTaskForm from "../edit-task-form";
 
-export default class Task extends Component {
+export default function Task (props) {
   
-  state = {
-    isTimerOn: false,
-    // eslint-disable-next-line react/prop-types,react/destructuring-assignment
-    min: this.props.min,
-    // eslint-disable-next-line react/prop-types,react/destructuring-assignment
-    sec: this.props.sec
-  }
+  const [isTimerOn, isTimerOnToggle] = useState(false);
+  // eslint-disable-next-line react/destructuring-assignment
+  const [min, setMin] = useState(props.min);
+  // eslint-disable-next-line react/destructuring-assignment
+  const [sec, setSec] = useState(props.sec);
 
-  componentWillUnmount() {
-    clearInterval(this.counter);
-  }
+  const {onToggleDone, deleteTask, editTask} = useContext(Context);
 
-  pressStart = () => {
-    this.setState({
-      isTimerOn: true,
-    })
-    this.counter = setInterval(() => {
-      this.secCountdown();
-    }, 1000);
-  }
+  const {label, id, createTimeToNow, completed, edited} = props;
 
-  pressPause = () => {
-    this.setState({
-      isTimerOn: false
-    })
-    clearInterval(this.counter)
-  }
-
-  secCountdown = () => {
-    const {min, sec, isTimerOn} = this.state;
-    const {onToggleDone} = this.props;
-    if(min === 0 && sec === 0 && isTimerOn === true) {
-      onToggleDone();
-      clearInterval(this.counter);
-      this.setState({isTimerOn: false})
-      return
+  useEffect(() => {
+    let interval = null;
+    if (isTimerOn) {
+      interval = setInterval(() => {
+        if(min === 0 && sec === 0 && isTimerOn === true) {
+          onToggleDone(id);
+          isTimerOnToggle(false);
+          return
+        }
+        if(sec>0) {
+          setSec(prev => prev - 1);
+          isTimerOnToggle(true);
+        }
+        else {
+          setMin(min - 1);
+          setSec(59)
+        }
+      }, 1000);
+    } else if (!isTimerOn && sec !== 0) {
+      clearInterval(interval);
     }
-    if(sec>0) {
-      this.setState({
-        sec: sec - 1,
-        isTimerOn: true
-      })
-    }
-    else {
-      this.minCountdown()
-    }
+    return () => clearInterval(interval);
+  }, [isTimerOn, sec, min, onToggleDone, id]);
+
+  const pressStart = () => {
+    isTimerOnToggle(true);
   }
 
-  minCountdown = () => {
-    const { min } = this.state;
-    this.setState({
-      min: min - 1,
-      sec: 59,
-    });
+  const pressPause = () => {
+    isTimerOnToggle(false);
   }
 
-  render() {
-    const {label, id, onDeleted, onToggleDone, completed, createTimeToNow, editTask, changeLabel, edited} = this.props;
-    const { isTimerOn, min, sec } = this.state;
-    let checked = false;
-    if (completed === true) {
-      checked = true;
-    }
-    const timerButtons = !isTimerOn ? (
-      <button type="button" aria-label="press Start" className="icon icon-play" onClick={this.pressStart}  />
-    ) : (
-      <button type="button" aria-label="press Pause" className="icon icon-pause" onClick={this.pressPause} />
-    );
-    return (
-      <li key={id} className={cn('view', {'completed' : completed}, {'editing' : edited})}>
-        <input
-          className="toggle"
-          type="checkbox"
-          onClick={onToggleDone}
-          readOnly
-          checked={checked}
-        />
-        <label>
-          <span className="description" role='button' tabIndex={0} onClick={onToggleDone} onKeyDown={onToggleDone}>
-            {label || "You created an empty task! Please delete it and type smth."}
-          </span>
-          <span className="description__time-value">{timerButtons}{min}:{sec}</span>
-          <span className="created">{createTimeToNow}</span>
-        </label>
-        <button aria-label="button" type="button" className="icon icon-edit" onClick={editTask} />
-        <button aria-label="button" type="button" className="icon icon-destroy" onClick={onDeleted} />
-        {edited ? (
-          <EditTaskForm id={id} label={label} changeLabel={changeLabel} />
-        ) : null}
-      </li>
-    )}
+
+  const timerButtons = !isTimerOn ? (
+    <button type="button" aria-label="press Start" className="icon icon-play" onClick={pressStart}  />
+  ) : (
+    <button type="button" aria-label="press Pause" className="icon icon-pause" onClick={pressPause} />
+  );
+
+  return (
+    <li key={id} className={cn('view', {'completed' : completed}, {'editing' : edited})}>
+      <input
+        className="toggle"
+        type="checkbox"
+        onClick={() => onToggleDone(id)}
+        checked={completed || false}
+        readOnly
+      />
+      <label>
+        <span className="description" role='button' tabIndex={0} onClick={() => onToggleDone(id)} onKeyDown={() => onToggleDone(id)}>
+          {label || "You created an empty task! Please delete it and type smth."}
+        </span>
+        <span className="description__time-value">{timerButtons}{min}:{sec}</span>
+        <span className="created">{createTimeToNow}</span>
+      </label>
+      <button aria-label="button" type="button" className="icon icon-edit" onClick={() => editTask(id)} />
+      <button aria-label="button" type="button" className="icon icon-destroy" onClick={() => deleteTask(id)} />
+      {edited ? (
+        <EditTaskForm id={id} label={label}/>
+      ) : null}
+    </li>
+  )
 }
 
   Task.defaultProps = {
     label: "Nothing received..",
     completed: false,
-    onDeleted: () => {},
-    onToggleDone: () => {},
     min: 0,
     sec: 0
   };
@@ -112,11 +91,7 @@ export default class Task extends Component {
     label: propTypes.string,
     id: propTypes.string.isRequired,
     completed: propTypes.bool,
-    onDeleted: propTypes.func,
-    onToggleDone: propTypes.func,
     createTimeToNow: propTypes.string.isRequired,
-    editTask: propTypes.func.isRequired,
-    changeLabel: propTypes.func.isRequired,
     edited: propTypes.bool.isRequired,
     min: propTypes.number,
     sec: propTypes.number

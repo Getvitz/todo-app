@@ -1,32 +1,19 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { Component } from "react/cjs/react.production.min";
+import React, {useState, useContext} from "react";
+import propTypes from "prop-types";
+import Context from "../../context/context";
 
-export default class EditTaskForm extends Component {
-  state = {
-    newLabel: "",
+export default function EditTaskForm (props) {
+  const [newLabel, setNewLabel] = useState('');
+  const {changeLabel} = useContext(Context)
+
+  const formattedLabel = event => event.target.value.charAt(0).toUpperCase() + event.target.value.slice(1)
+
+  const onLabelChange = event => {
+    setNewLabel(formattedLabel(event))
   };
 
-  static defaultProps = {
-    label: "",
-    changeLabel: () => {},
-  };
-
-  static propTypes = {
-    label: PropTypes.string,
-    id: PropTypes.string.isRequired,
-    changeLabel: PropTypes.func,
-  };
-
-  onLabelChange = (event) => {
-    this.setState({
-      newLabel: this.formattedLabel(event)
-    });
-  };
-
-  onKeyPress = (event) => {
-    const { changeLabel, id, label } = this.props;
-    const { newLabel } = this.state;
+  const onKeyPress = event => {
+    const { id, label } = props;
 
     if (event.key === "Enter") {
       if (!newLabel) {
@@ -37,20 +24,24 @@ export default class EditTaskForm extends Component {
     }
   };
 
-  formattedLabel(event) {
-    return event.target.value.charAt(0).toUpperCase() + event.target.value.slice(1)
-  }
+  const { label } = props;
 
-  render() {
-    const { label } = this.props;
-    return (
-      <input
-        type="text"
-        className="edit"
-        placeholder={label}
-        onChange={this.onLabelChange}
-        onKeyPress={this.onKeyPress}
-      />
-    );
-  }
+return (
+  <input
+    type="text"
+    className="edit"
+    placeholder={label}
+    onChange={onLabelChange}
+    onKeyPress={onKeyPress}
+  />
+);
 }
+
+EditTaskForm.defaultProps = {
+    label: "",
+  };
+
+EditTaskForm.propTypes = {
+    label: propTypes.string,
+    id: propTypes.string.isRequired,
+  };

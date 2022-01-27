@@ -110,25 +110,6 @@ body {
 	box-shadow: inset 0 -2px 1px rgba(0,0,0,0.03);
 }
 
-.add-btn {
-	display: block;
-	width: 100%;
-	margin: 0 auto;
-	height: 30px;
-	font-style: italic;
-	font-weight: 300;
-	color: rgba(0, 0, 0, 0.4);
-	background: none;
-	cursor: pointer;
-	font-size: 18px;
-	border: 1px solid transparent;
-	border-radius: 3px;
-}
-
-.add-btn:hover {
-	border-color: rgba(175, 47, 47, 0.1);
-}
-
 .emptyMsg {
 	display: block;
 	width: 100%;
